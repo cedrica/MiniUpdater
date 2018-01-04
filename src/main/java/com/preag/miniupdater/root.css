@@ -1,0 +1,281 @@
+ .root {
+	-fx-base-color: yellow;
+	-fx-base-border-color: #D3D3D3;
+	-fx-base-background-color: #4e4d4d;
+	/*-fx-focus-color: -fx-base-color;*/
+	-fx-accent: derive(-fx-base-color,50.0%);
+	-fx-faint-focus-color:transparent;
+	-fx-base-bright-background:#dcdcdc;
+	-fx-icon-height:30.0;
+	-fx-icon-width:30.0;
+}
+.card {
+    -fx-background-color: rgb(255.0, 255.0, 255.0);
+    -fx-background-radius: 0.0; /* 4.0 */
+    -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,
+    1.5);
+    -fx-padding: 16.0 16.0 16.0 16.0;
+}
+/*******************************************************************************
+ * 								header                   		               *
+ ******************************************************************************/
+.header {
+	-fx-font-size:16.0px;
+	-fx-font-weight: bold;
+}
+
+.header-underline {
+	-fx-font-size:16.0px;
+	-fx-font-weight: bold;
+	-fx-underline: true;
+}
+.label-pane-header{
+	-fx-background-color: derive(-fx-base-color,30.0%);
+	-fx-padding: 5.0 20.0 5.0 20.0;
+}
+
+/*******************************************************************************
+ * 								hover-label                   		           *
+ ******************************************************************************/
+.hover-label:hover {
+	-fx-text-fill: -fx-base-color;
+}
+
+.hover-label:hover .glyph-font {
+	-fx-text-fill: -fx-base-color;
+}
+
+/*******************************************************************************
+ * 								font                   		                   *
+ ******************************************************************************/
+.font-big {
+	-fx-font-size: 16.0px;
+}
+
+.font-medium {
+	-fx-font-size: 14.0px;
+}
+
+.font-small {
+	-fx-font-size: 12.0px;
+}
+
+/*******************************************************************************
+ * 								Button                   		                   *
+ ******************************************************************************/
+.button {
+	-fx-background-color: transparent;
+	-fx-border-color: darkgray;
+	-fx-background-radius: 5.0;
+	-fx-border-radius: 5.0;
+}
+
+.button:hover {
+	-fx-background-color: -fx-base-color;
+}
+
+.glyph-nohover-button .glyph-font{
+	-fx-text-fill: -fx-base-color;
+	-fx-font-family : "FontAwesome";
+	-fx-font-size: 30.0px;
+}
+
+.glyph-nohover-button {
+	-fx-border-color: transparent
+}
+
+.glyph-nohover-button:hover{
+	-fx-background-color:transparent
+}
+
+/*******************************************************************************
+ * 								glyph-hover-button                   		   *
+ ******************************************************************************/
+.glyph-hover-button {
+	-fx-background-color: transparent;
+	-fx-border-color: transparent
+}
+
+.glyph-hover-button .glyph-font {
+	-fx-text-fill: lightgray ;
+	-fx-font-family : "FontAwesome";
+	-fx-font-size: 20.0px;
+}
+
+.glyph-hover-button:selected .glyph-font{
+	-fx-text-fill: -fx-base-color;
+}
+
+.glyph-hover-button:hover > .glyph-font {
+	-fx-text-fill: derive(-fx-base-color,30.0%);
+}
+
+/*******************************************************************************
+ * 			     	   ScrollPane	               						*
+ ******************************************************************************/
+ .scroll-pane-invisible{
+ 	-fx-background-color: transparent;
+ }
+ 
+.scroll-pane-invisible > .viewport{
+	-fx-background-color:transparent;
+}
+
+/*******************************************************************************
+ * 			     	   comboboxes	               						*
+ ******************************************************************************/
+.combo-box {
+	-fx-border-radius:5.0;
+	-fx-background-radius: 5.0;
+	-fx-background-color: transparent;
+	-fx-border-color:gray
+}
+
+.combo-box > .arrow-button > .arrow {
+	-fx-background-color: gray;
+}
+
+.combo-box-base > .list-cell {
+	-fx-text-fill: #333;
+}
+
+.combo-box-popup .list-view {
+	-fx-background-radius: 5.0;
+	-fx-padding: 5.0;
+}
+
+/*******************************************************************************
+ * 								orange-separator-small            			   *
+ ******************************************************************************/
+.orange-separator-small .line {
+	-fx-border-style: solid;
+	-fx-border-color: orange;
+	-fx-background-color: orange;
+}
+
+/*******************************************************************************
+ * 								orange-separator-big            			   *
+ ******************************************************************************/
+.orange-separator-big .line {
+	-fx-border-style: solid;
+	-fx-border-color: orange;
+	-fx-background-color: orange;
+	-fx-border-width: 2.0px;
+}
+
+.context-menu {
+	-fx-background-color: #fff;
+	-fx-text-fill: #333;
+	-fx-pref-width:150.0px;
+	-fx-border-radius: 5.0;
+	-fx-background-radius: 5.0;
+	-fx-padding: 10.0;
+}
+
+/*******************************************************************************
+ * 								table-view           			   *
+ ******************************************************************************/
+.table-view {
+	-fx-background-color: white;
+}
+
+.table-view .column-header {
+	-fx-background-color: lightgray;
+	-fx-border-color: rgb(128.0,128.0,64.0);
+	-fx-pref-height: 30.0;
+	-fx-border-width: 0.1
+}
+
+.table-view:focused {
+	-fx-background-color: transparent;
+	-fx-border-color: -fx-base-bright-background;
+	-fx-border-width: 1.0
+}
+
+.table-view .filter {
+	-fx-background-color: transparent;
+	-fx-blend-mode: blue;
+}
+
+.table-view .column-header-background {
+	-fx-background-color: #fff;
+}
+
+.table-view .column-header-background .label {
+	-fx-background-color: -fx-base-bright-background;
+	-fx-text-fill: #000;
+}
+
+.table-view .table-cell {
+	-fx-text-fill: #222;
+}
+
+.table-row-cell {
+	-fx-border-width:0.1;
+	-fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
+	-fx-padding: 0.0em;
+}
+
+/* HEADER */
+.h1-small,
+.h2-small,
+.h3-small {
+	-fx-font-size: 65.0%;
+	-fx-font-weight: normal;
+	-fx-background-color: #777;
+}
+
+.h4-small,
+.h5-small,
+.h6-small {
+	-fx-font-size: 75.0%;
+	-fx-font-weight: normal;
+	-fx-background-color: #777;
+}
+
+.h1 {
+	-fx-font-size: 36.0px;
+}
+
+.h2 {
+	-fx-font-size: 30.0px;
+}
+
+.h3 {
+	-fx-font-size: 24.0px;
+}
+
+.h4 {
+	-fx-font-size: 18.0px;
+}
+
+.h5 {
+	-fx-font-size: 14.0px;
+}
+
+.h6 {
+	-fx-font-size: 12.0px;
+}
+
+/* FONT */
+.italic {
+	-fx-font-style: italic;
+}
+
+.oblique {
+	-fx-font-style: oblique;
+}
+
+.bold {
+	-fx-font-weight: bold;
+}
+
+.custom-text-field{
+	-fx-background-radius: 0.0 0.0 0.0 0.0;
+	-fx-border-radius: 0.0 0.0 0.0 0.0;
+}
+
+.header-box{
+	-fx-background-color:lightgray;
+	-fx-pref-height: 30.0;
+}

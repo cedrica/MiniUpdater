@@ -1,0 +1,29 @@
+.mini-updater-view {
+	
+}
+.progress-bar > .bar {
+    -fx-background-color: linear-gradient(
+        from 0px .75em to .75em 0px,
+        repeat,
+        -fx-accent 0%,
+        -fx-accent 49%,
+        derive(-fx-accent, 30%) 50%,
+        derive(-fx-accent, 30%) 99%
+    );
+}
+.mini-updater-view .download-icon {
+	-fx-background-color:green;
+	-fx-pref-height: 20px;
+	-fx-pref-width: 20px;
+}
+
+.mini-updater-view .arrow-right-icon {
+	-fx-background-color:darkorange;
+	-fx-pref-height: 15px;
+	-fx-pref-width: 15px;
+}
+.mini-updater-view .close-icon {
+	-fx-background-color:red;
+	-fx-pref-height: 10px;
+	-fx-pref-width: 15px;
+}
