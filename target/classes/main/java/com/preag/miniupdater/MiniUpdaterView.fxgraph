@@ -14,6 +14,8 @@ import javafx.scene.control.Button
 import javafx.scene.layout.StackPane
 import javafx.scene.control.ProgressIndicator
 import org.controlsfx.control.MaskerPane
+import impl.org.controlsfx.spreadsheet.CellView
+import javafx.scene.control.Separator
 
 dynamic component MiniUpdaterView controlledby MiniUpdaterController styledwith [ "/com/preag/miniupdater/root.css",
 	"/com/preag/miniupdater/svg-icons.css", "/com/preag/miniupdater/MiniUpdater.css" ] {
@@ -33,24 +35,45 @@ dynamic component MiniUpdaterView controlledby MiniUpdaterController styledwith 
 			bottom : 10
 		},
 		top : HBox {
-			ProgressBar id progressBar {
-				static hgrow : "ALWAYS",
-				maxWidth : const Double#MAX_VALUE,
-				prefHeight : 25,
-				visible : false,
-				style : "-fx-accent: darkorange;"
+			alignment : "CENTER",
+			style : "-fx-background-color:darkorange;",
+			prefHeight : 50,
+			Label {
+				styleClass : [
+					"h1",
+					"bold"
+				],
+				style : "-fx-text-fill: #fff",
+				text : "Eine neue version ist vorhanden"
 			},
 			padding : Insets {
 				bottom : 10
 			}
 		},
-		center : StackPane {
-			WebView id webView {
-
+		center : VBox {
+			spacing : 10,
+			ProgressBar id progressBar {
+				static vgrow : "ALWAYS",
+				maxWidth : const Double#MAX_VALUE,
+				minHeight : 30,
+				visible : false,
+				style : "-fx-accent: darkorange;"
 			},
-			MaskerPane id progressIndicator {
-				text : "Bitte warten ...",
-				progressVisible : true
+			StackPane {
+				static vgrow : "ALWAYS",
+				WebView id webView {
+					styleClass : [
+						"web-view"
+					]
+
+				},
+				MaskerPane id progressIndicator {
+					text : "Bitte warten ...",
+					progressVisible : true
+				}
+			},
+			Separator{
+				orientation : "HORIZONTAL"
 			}
 		},
 		bottom : HBox {

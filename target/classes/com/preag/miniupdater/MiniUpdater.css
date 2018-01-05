@@ -1,5 +1,9 @@
 .mini-updater-view {
-	
+	-fx-background-color:#fff;
+}
+.mini-updater-view .web-view{
+	-fx-border-color:#444;
+	-fx-border-width:1;
 }
 .progress-bar > .bar {
     -fx-background-color: linear-gradient(
@@ -18,7 +22,7 @@
 }
 
 .mini-updater-view .arrow-right-icon {
-	-fx-background-color:darkorange;
+	-fx-background-color:green;
 	-fx-pref-height: 15px;
 	-fx-pref-width: 15px;
 }

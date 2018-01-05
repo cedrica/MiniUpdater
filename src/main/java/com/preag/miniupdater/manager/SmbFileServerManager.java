@@ -1,4 +1,4 @@
-package com.preag.miniupdater;
+package com.preag.miniupdater.manager;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -6,32 +6,30 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import com.preag.miniupdater.MiniUpdaterEvent;
+import com.preag.miniupdater.MiniUpdaterView;
+import com.preag.miniupdater.common.Helper;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.web.WebEngine;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 
+/**
+ * 
+ * @author ca.leumaleu
+ *
+ */
 public class SmbFileServerManager {
 
 	private MiniUpdaterView miniUpdaterView;
-	private URL filesFeed;
-	private String version;
-	private String link;
 	private ObjectProperty<Long> originalSize = new SimpleObjectProperty<>();
 	private ObjectProperty<Long> downloadedSize = new SimpleObjectProperty<>();
+	private boolean startDownload = false;
 
 	private static String SMB_PATH = "smb:";
 	private SmbFileServerConnectionManager smbFileServerConnectionManager;
@@ -39,23 +37,19 @@ public class SmbFileServerManager {
 	public SmbFileServerManager(MiniUpdaterView miniUpdaterView, WebEngine webEngine) {
 		this.miniUpdaterView = miniUpdaterView;
 		smbFileServerConnectionManager = new SmbFileServerConnectionManager(miniUpdaterView);
-
 		try {
-			File file = convertSMBToTempFile(smbFileServerConnectionManager.pathToChangeLogFile());
-			if(file != null)
-			webEngine.load(file.toURI().toURL().toString());
+			File file = convertSMBToTempFile(
+					Helper.constructPathToChangeLogFile(miniUpdaterView.getSoftwareUpdate().getUpdateUrl()));
+			if (file != null)
+				webEngine.load(file.toURI().toURL().toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		this.miniUpdaterView.addEventHandler(MiniUpdaterEvent.START_OR_PAUSE_DOWNLOAD, evt -> {
-			updateDownload(smbFileServerConnectionManager.pathToExeFile());
+			startDownload = ((ToggleButton) evt.getTarget()).isSelected();
+			updateDownload(miniUpdaterView.getSoftwareUpdate().getUpdateUrl());
 		});
-	}
-
-	static String readFile(String path, Charset encoding) throws IOException {
-		byte[] encoded = Files.readAllBytes(Paths.get(path));
-		return new String(encoded, encoding);
 	}
 
 	/**
@@ -65,11 +59,9 @@ public class SmbFileServerManager {
 	 * @param preUpdateView
 	 */
 	public void updateDownload(String updaterURL) {
-		if (this.miniUpdaterView.isDownload()) {
 			startDownload(updaterURL);
 			downloadedSizeProperty()
 					.addListener(evt -> this.miniUpdaterView.setDownloadProgress(updateDownloadProgress()));
-		}
 	}
 
 	void startDownload(String updaterUrl) {
@@ -79,7 +71,6 @@ public class SmbFileServerManager {
 	}
 
 	private void finishDownload(File newVal) {
-
 		if (newVal != null && newVal.exists()) {
 			try {
 				Desktop.getDesktop().open(newVal);
@@ -87,14 +78,11 @@ public class SmbFileServerManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else {
-			// ALERT SOMETHING
 		}
 	}
 
 	private Task<File> createDownloadTask(String updaterURL) {
 		return new Task<File>() {
-
 			@Override
 			protected File call() throws Exception {
 				File newVersion = convertSMBToTempFileAndDownload(updaterURL);
@@ -112,41 +100,9 @@ public class SmbFileServerManager {
 		return downloadedSize.doubleValue() / originalSize.doubleValue();
 	}
 
-	/**
-	 * <item> < </item>
-	 * 
-	 * @return
-	 */
-	public boolean updateNeeded() {
-		try {
-			this.filesFeed = new URL(smbFileServerConnectionManager.pathToChangeLogFile());
-			InputStream inputStream = this.filesFeed.openConnection().getInputStream();
-			Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
-			Node latesFile = document.getElementsByTagName("div").item(0);
-			NodeList childNodes = latesFile.getChildNodes();
-			this.version = childNodes.item(1).getTextContent().replaceAll("[a-zA-Z ]", "");
-			this.link = childNodes.item(3).getTextContent();
-			System.out.println("Verion: " + this.version + " link: " + this.link);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return false;
-	}
-
-	public static String getExtensionFromFilename(String filename) {
-		if (filename == null) {
-			return null;
-		}
-		if (filename.contains(".")) {
-			String[] split = filename.split("\\.");
-			return split[split.length - 1];
-		}
-		return null;
-	}
-
 	public File convertSMBToTempFile(String source) {
+		if (source == null || source.isEmpty())
+			return null;
 		SmbFile smbFile = getSmbFile(source);
 		try {
 			if (smbFile.exists()) {
@@ -174,15 +130,16 @@ public class SmbFileServerManager {
 			if (smbFile.exists()) {
 				try {
 					InputStream in = smbFile.getInputStream();
-					String extension = getExtensionFromFilename(smbFile.getName());
+					String extension = Helper.getExtensionFromFilename(smbFile.getName());
 					File temp = File.createTempFile(source, "." + extension);
 					FileOutputStream out = new FileOutputStream(temp);
-
 					setOriginalSize(smbFile.length());
 					int len;
 					final byte[] buf = new byte[1024 * 1024];
 					setDownloadedSize(0l);
 					while ((len = in.read(buf)) > 0) {
+						if(!this.startDownload)
+							return null;
 						out.write(buf, 0, len);
 						setDownloadedSize(getDownloadedSize() + len);
 					}
@@ -195,7 +152,6 @@ public class SmbFileServerManager {
 				}
 			}
 		} catch (SmbException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

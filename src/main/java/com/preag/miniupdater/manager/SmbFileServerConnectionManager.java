@@ -1,9 +1,11 @@
-package com.preag.miniupdater;
+package com.preag.miniupdater.manager;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.Properties;
+
+import com.preag.miniupdater.MiniUpdaterView;
+import com.preag.miniupdater.common.Helper;
+import com.preag.miniupdater.data.DummySoftareUpdate;
 
 import jcifs.UniAddress;
 import jcifs.smb.NtlmPasswordAuthentication;
@@ -16,8 +18,6 @@ public class SmbFileServerConnectionManager {
 	private String userName = null;
 	private String password = null;
 	private String domain = null;
-	private String folder = null;
-	private String programbasename = null;
 	private NtlmPasswordAuthentication authentification ;
 	
 	public  SmbFileServerConnectionManager (MiniUpdaterView miniUpdaterView){
@@ -50,43 +50,22 @@ public class SmbFileServerConnectionManager {
 		}
 		return auth;
 	}
-	public  String pathToExeFile(){
-		return this.serverAddress.concat(this.folder).concat(this.programbasename).concat(".exe");
-	}
-	public  String pathToChangeLogFile(){
-		return this.serverAddress.concat(this.folder).concat(this.programbasename).concat(".html");
-	}
-	public static Properties aquierePropertiesFile(String propName) {
-		InputStream input = null;
-		Properties properties = new Properties();
-		input = SmbFileServerManager.class.getResourceAsStream("/" + propName);
-		try {
-			properties.load(input);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(input != null)
-					input.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return properties;
-	}
+
 	/**
 	 * Load all Properties
 	 * @param prop
 	 */
 	public void loadProperty(MiniUpdaterView miniUpdaterView) {
-		Properties prop = aquierePropertiesFile(miniUpdaterView.getPropertyFilePath());
+		DummySoftareUpdate softwareUpdate = miniUpdaterView.getSoftwareUpdate();
+		this.serverAddress = Helper.retrieveServerAddress(softwareUpdate.getUpdateUrl());
+		Properties prop = Helper.aquierePropertiesFile(miniUpdaterView.getPropertyFilePath());
 		this.serverAddress = prop.getProperty("serveraddress");
 		this.userName = prop.getProperty("username");
 		this.password = prop.getProperty("password");
 		this.domain = prop.getProperty("domain");
-		this.folder = prop.getProperty("folder");
-		this.programbasename = prop.getProperty("programbasename");
 	}
+
+
 
 	public NtlmPasswordAuthentication getAuthentification() {
 		return authentification;

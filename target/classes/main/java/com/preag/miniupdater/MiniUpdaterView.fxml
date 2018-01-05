@@ -9,9 +9,11 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 <?import org.controlsfx.control.MaskerPane?>
 <?scenebuilder-stylesheet /com/preag/miniupdater/root.css?>
@@ -32,20 +34,33 @@
 		<Insets top="10" left="10" right="10" bottom="10"/> 
 	</padding>
 	<top>
-		<HBox> 
-			<ProgressBar fx:id="progressBar" prefHeight="25" visible="false" style="-fx-accent: darkorange;" HBox.hgrow="ALWAYS"> 
-				<maxWidth><Double fx:constant="MAX_VALUE" /></maxWidth>
-			</ProgressBar>
+		<HBox alignment="CENTER" style="-fx-background-color:darkorange;" prefHeight="50"> 
+			<Label style="-fx-text-fill: #fff" text="Eine neue version ist vorhanden"> 
+				<styleClass>
+					<String fx:value="h1" />
+					<String fx:value="bold" />
+				</styleClass>
+			</Label>
 			<padding>
 				<Insets bottom="10"/> 
 			</padding>
 		</HBox>
 	</top>
 	<center>
-		<StackPane> 
-			<WebView fx:id="webView"/> 
-			<MaskerPane fx:id="progressIndicator" text="Bitte warten ..." progressVisible="true"/> 
-		</StackPane>
+		<VBox spacing="10"> 
+			<ProgressBar fx:id="progressBar" minHeight="30" visible="false" style="-fx-accent: darkorange;" VBox.vgrow="ALWAYS"> 
+				<maxWidth><Double fx:constant="MAX_VALUE" /></maxWidth>
+			</ProgressBar>
+			<StackPane VBox.vgrow="ALWAYS"> 
+				<WebView fx:id="webView"> 
+					<styleClass>
+						<String fx:value="web-view" />
+					</styleClass>
+				</WebView>
+				<MaskerPane fx:id="progressIndicator" text="Bitte warten ..." progressVisible="true"/> 
+			</StackPane>
+			<Separator orientation="HORIZONTAL"/> 
+		</VBox>
 	</center>
 	<bottom>
 		<HBox spacing="5" alignment="CENTER_RIGHT"> 

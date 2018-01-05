@@ -5,6 +5,8 @@ import java.util.ResourceBundle;
 
 import org.controlsfx.control.MaskerPane;
 
+import com.preag.miniupdater.manager.SmbFileServerManager;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -39,6 +41,11 @@ public class MiniUpdaterController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		worker = webView.getEngine().getLoadWorker();
+		registerBindings();
+		registerListener();
+	}
+
+	private void registerListener() {
 		worker.stateProperty().addListener(new ChangeListener<State>() {
 			@Override
 			public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {
@@ -49,12 +56,6 @@ public class MiniUpdaterController implements Initializable {
 				}
 			}
 		});
-		registerBindings();
-		registerListener();
-
-	}
-
-	private void registerListener() {
 		tgbDownload.selectedProperty().addListener((obs, oldVal, newVal) -> {
 			if (!newVal) {
 				lblIcon.getStyleClass().clear();
@@ -66,7 +67,7 @@ public class MiniUpdaterController implements Initializable {
 				tgbDownload.setText("Download stopen");
 			}
 		});
-		rootNode.checkUpdateProperty().addListener((obs, oldVal, newVal) -> {
+		rootNode.startUpdateProperty().addListener((obs, oldVal, newVal) -> {
 			if (newVal) {
 				new SmbFileServerManager(rootNode, webView.getEngine());
 			}
@@ -75,14 +76,13 @@ public class MiniUpdaterController implements Initializable {
 
 	private void registerBindings() {
 		progressIndicator.progressProperty().bind(worker.progressProperty());
-		rootNode.downloadProperty().bind(tgbDownload.selectedProperty());
 		progressBar.progressProperty().bind(rootNode.downloadProgressProperty());
 		progressBar.visibleProperty().bind(tgbDownload.selectedProperty());
 	}
 
 	@FXML
 	public void onStartDownload() {
-		rootNode.fireEvent(new MiniUpdaterEvent(MiniUpdaterEvent.START_OR_PAUSE_DOWNLOAD));
+		tgbDownload.fireEvent(new MiniUpdaterEvent(MiniUpdaterEvent.START_OR_PAUSE_DOWNLOAD));
 	}
 
 	@FXML

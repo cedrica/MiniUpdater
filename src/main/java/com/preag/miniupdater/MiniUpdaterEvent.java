@@ -1,10 +1,9 @@
 package com.preag.miniupdater;
 
-import com.preag.core.ui.event.ApplicationEvent;
-
+import javafx.event.Event;
 import javafx.event.EventType;
 
-public class MiniUpdaterEvent extends ApplicationEvent{
+public class MiniUpdaterEvent extends Event{
 
 	/**
 	 * 
